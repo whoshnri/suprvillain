@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma"
 import { ProductGrid } from "@/components/product-grid"
 import { ProductFilters } from "@/components/product-filters"
+import { headers } from "next/headers"
 
 export const dynamic = "force-dynamic"
 
@@ -9,6 +10,7 @@ export default async function HomePage({
 }: {
   searchParams: Promise<{ category?: string; search?: string }>
 }) {
+  const country = headers().get("x-vercel-ip-country") || "GB"
   const params = await searchParams
   const category = params.category
   const search = params.search
@@ -34,15 +36,19 @@ export default async function HomePage({
 
   return (
     <main className="min-h-screen">
-      <div className="container py-8">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold tracking-tight mb-2 text-balance">Discover Minimalist Essentials</h1>
-          <p className="text-lg text-muted-foreground text-pretty">
-            Curated collection of timeless pieces for your everyday life
+      <section className="py-20 md:py-32 bg-secondary/50">
+        <div className="container text-center">
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4 text-balance">
+            Welcome to Suprvillain Store
+          </h1>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto text-pretty">
+            Discover a curated collection of timeless pieces, designed to blend seamlessly into your everyday life.
           </p>
         </div>
+      </section>
+      <div className="container py-12">
         <ProductFilters categories={categories.map((c) => c.category)} />
-        <ProductGrid products={products} />
+        <ProductGrid products={products} country={country} />
       </div>
     </main>
   )

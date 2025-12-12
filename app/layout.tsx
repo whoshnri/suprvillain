@@ -5,13 +5,14 @@ import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { CartProvider } from "@/lib/cart-context"
 import { Header } from "@/components/header"
+import { ThemeProvider } from "next-themes"
 
 const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Minimalist Store",
-  description: "A clean and minimalistic storefront",
+  title: "Suprvillain Store",
+  description: "A curated collection of timeless pieces, designed to blend seamlessly into your everyday life.",
   generator: "v0.app",
   icons: {
     icon: [
@@ -38,13 +39,17 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`font-sans antialiased`}>
-        <CartProvider>
-          <Header />
-          {children}
-        </CartProvider>
-        <Analytics />
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <CartProvider>
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <main className="flex-grow">{children}</main>
+            </div>
+          </CartProvider>
+          <Analytics />
+        </ThemeProvider>
       </body>
     </html>
   )
