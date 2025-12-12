@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { CartSheet } from "./cart-sheet"
+import { ThemeSwitcher } from "./theme-switcher"
 
 function StoreIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -30,15 +31,10 @@ export function Header() {
       <div className="container flex h-20 items-center justify-between">
         <Link href="/" className="font-bold text-2xl flex items-center gap-2">
           <StoreIcon className="w-6 h-6" />
-          <span className="hidden sm:inline-block">Minimalist Store</span>
+          <span className="hidden sm:inline-block">Suprvillain Store</span>
         </Link>
         <nav className="flex items-center gap-6">
-          <Link
-            href="/admin"
-            className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Admin
-          </Link>
+          <ThemeSwitcher />
           <CartSheet />
         </nav>
       </div>

@@ -2,14 +2,15 @@
 
 import { Button } from "@/components/ui/button"
 import { useCart } from "@/lib/cart-context"
-import { FiShoppingCart, FiCheck } from "react-icons/fi"
+import { FiShoppingCart, FiMinus, FiPlus } from "react-icons/fi"
 import { useState } from "react"
 import { Product } from "@/lib/types"
-
+import { Modal } from "@/components/ui/modal"
 
 export function AddToCartButton({ product }: { product: Product }) {
-  const { addItem } = useCart()
-  const [added, setAdded] = useState(false)
+  const { addItem, getItem, updateItem, removeItem } = useCart()
+  const [quantity, setQuantity] = useState(getItem(product.id)?.quantity || 0)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleAddToCart = () => {
     addItem({
@@ -18,28 +19,70 @@ export function AddToCartButton({ product }: { product: Product }) {
       price: product.price,
       image: product.image || "",
     })
-    setAdded(true)
-    setTimeout(() => setAdded(false), 2000)
+    setQuantity(1)
+    setIsModalOpen(true)
+  }
+
+  const handleUpdateQuantity = (newQuantity: number) => {
+    if (newQuantity === 0) {
+      removeItem(product.id)
+      setQuantity(0)
+    } else {
+      updateItem(product.id, newQuantity)
+      setQuantity(newQuantity)
+    }
+  }
+
+  if (quantity > 0) {
+    return (
+      <div className="flex items-center gap-2">
+        <Button
+          variant="outline"
+          size="icon"
+          className="rounded-full"
+          onClick={() => handleUpdateQuantity(quantity - 1)}
+        >
+          <FiMinus className="h-5 w-5" />
+        </Button>
+        <span className="font-medium text-lg">{quantity}</span>
+        <Button
+          variant="outline"
+          size="icon"
+          className="rounded-full"
+          onClick={() => handleUpdateQuantity(quantity + 1)}
+          disabled={quantity >= product.stock}
+        >
+          <FiPlus className="h-5 w-5" />
+        </Button>
+      </div>
+    )
   }
 
   return (
-    <Button
-      size="lg"
-      onClick={handleAddToCart}
-      disabled={product.stock === 0 || added}
-      className="rounded-full w-full sm:w-auto min-w-[200px]"
-    >
-      {added ? (
-        <>
-          <FiCheck className="mr-2 h-5 w-5" />
-          Added to cart
-        </>
-      ) : (
-        <>
-          <FiShoppingCart className="mr-2 h-5 w-5" />
-          Add to cart
-        </>
-      )}
-    </Button>
+    <>
+      <Button
+        size="lg"
+        onClick={handleAddToCart}
+        disabled={product.stock === 0}
+        className="rounded-full w-full sm:w-auto min-w-[200px]"
+      >
+        <FiShoppingCart className="mr-2 h-5 w-5" />
+        Add to cart
+      </Button>
+      <Modal
+        title="Added to cart"
+        isOpen={isModalOpen}
+        closeModal={() => setIsModalOpen(false)}
+      >
+        <p>
+          {product.name} has been added to your cart.
+        </p>
+        <div className="mt-4">
+          <Button onClick={() => setIsModalOpen(false)}>
+            Continue shopping
+          </Button>
+        </div>
+      </Modal>
+    </>
   )
 }
