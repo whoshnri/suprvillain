@@ -1,16 +1,8 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Card } from "@/components/ui/card"
+import { Product } from "@/lib/types"
 
-type Product = {
-  id: string
-  name: string
-  description: string
-  price: number
-  image: string
-  category: string
-  stock: number
-}
 
 export function ProductGrid({ products }: { products: Product[] }) {
   if (products.length === 0) {
