@@ -5,12 +5,10 @@ import { useCart } from "@/lib/cart-context"
 import { FiShoppingCart, FiMinus, FiPlus } from "react-icons/fi"
 import { useState } from "react"
 import { Product } from "@/lib/types"
-import { Modal } from "@/components/ui/modal"
 
 export function AddToCartButton({ product }: { product: Product }) {
-  const { addItem, getItem, updateItem, removeItem } = useCart()
+  const { addItem, getItem, updateQuantity, removeItem } = useCart()
   const [quantity, setQuantity] = useState(getItem(product.id)?.quantity || 0)
-  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleAddToCart = () => {
     addItem({
@@ -20,7 +18,6 @@ export function AddToCartButton({ product }: { product: Product }) {
       image: product.image || "",
     })
     setQuantity(1)
-    setIsModalOpen(true)
   }
 
   const handleUpdateQuantity = (newQuantity: number) => {
@@ -28,14 +25,14 @@ export function AddToCartButton({ product }: { product: Product }) {
       removeItem(product.id)
       setQuantity(0)
     } else {
-      updateItem(product.id, newQuantity)
+      updateQuantity(product.id, newQuantity)
       setQuantity(newQuantity)
     }
   }
 
   if (quantity > 0) {
     return (
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 w-full">
         <Button
           variant="outline"
           size="icon"
@@ -69,20 +66,7 @@ export function AddToCartButton({ product }: { product: Product }) {
         <FiShoppingCart className="mr-2 h-5 w-5" />
         Add to cart
       </Button>
-      <Modal
-        title="Added to cart"
-        isOpen={isModalOpen}
-        closeModal={() => setIsModalOpen(false)}
-      >
-        <p>
-          {product.name} has been added to your cart.
-        </p>
-        <div className="mt-4">
-          <Button onClick={() => setIsModalOpen(false)}>
-            Continue shopping
-          </Button>
-        </div>
-      </Modal>
+      
     </>
   )
 }

@@ -19,6 +19,7 @@ type CartContextType = {
   updateQuantity: (id: string, quantity: number) => void
   clearCart: () => void
   total: number
+  getItem: (id: string) => CartItem | undefined
   itemCount: number
 }
 
@@ -35,6 +36,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
+  function getItem(id: string) {
+    return items.find((i) => i.id === id)
+  }
   // Save cart to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(items))
@@ -74,6 +78,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       value={{
         items,
         addItem,
+        getItem,
         removeItem,
         updateQuantity,
         clearCart,

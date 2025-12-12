@@ -46,7 +46,7 @@ export default function CheckoutPage() {
 
   return (
     <main className="min-h-screen">
-      <div className="container py-8 max-w-6xl">
+      <div className="container py-8 max-w-6xl mx-auto">
         <Button variant="ghost" asChild className="mb-6 rounded-full">
           <Link href="/">
             <FiArrowLeft className="mr-2 h-4 w-4" />

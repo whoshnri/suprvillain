@@ -44,7 +44,9 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                 <span className="text-sm text-destructive font-medium">Out of stock</span>
               )}
             </div>
+            <div className="pt-10">
             <AddToCartButton product={product} />
+            </div>
           </div>
         </div>
       </div>

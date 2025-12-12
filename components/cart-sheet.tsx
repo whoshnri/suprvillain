@@ -33,7 +33,7 @@ export function CartSheet() {
             </div>
           ) : (
             <>
-              <div className="flex-1 overflow-auto py-6 space-y-4">
+              <div className="flex-1 overflow-auto p-6 space-y-4">
                 {items.map((item) => (
                   <div key={item.id} className="flex gap-4 items-start">
                     <div className="relative h-20 w-20 rounded-xl overflow-hidden bg-muted flex-shrink-0">
@@ -73,7 +73,7 @@ export function CartSheet() {
                   </div>
                 ))}
               </div>
-              <div className="border-t pt-4 space-y-4">
+              <div className="border-t p-4 space-y-4 mt-10">
                 <div className="flex justify-between text-lg font-semibold">
                   <span>Total</span>
                   <span>${total.toFixed(2)}</span>

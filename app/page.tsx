@@ -10,7 +10,7 @@ export default async function HomePage({
 }: {
   searchParams: Promise<{ category?: string; search?: string }>
 }) {
-  const country = headers().get("x-vercel-ip-country") || "GB"
+  const country = (await headers()).get("x-vercel-ip-country") || "GB"
   const params = await searchParams
   const category = params.category
   const search = params.search

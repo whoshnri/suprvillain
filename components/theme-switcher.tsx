@@ -11,10 +11,11 @@ export function ThemeSwitcher() {
     <Button
       variant="ghost"
       size="icon"
+      className="flex justify-center items-center"
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
     >
-      <FiSun className="h-6 w-6 scale-100 dark:scale-0" />
-      <FiMoon className="h-6 w-6 scale-0 dark:scale-100" />
+      <FiSun className="h-6 w-6 scale-100 dark:hidden" />
+      <FiMoon className="h-6 w-6 scale-0 dark:scale-100 hidden dark:block" />
       <span className="sr-only">Toggle theme</span>
     </Button>
   )

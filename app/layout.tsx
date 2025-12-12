@@ -43,7 +43,7 @@ export default function RootLayout({
       <body className={`font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <CartProvider>
-            <div className="flex flex-col min-h-screen">
+            <div className="flex flex-col min-h-screen px-8 mx-auto">
               <Header />
               <main className="flex-grow">{children}</main>
             </div>

@@ -37,14 +37,14 @@ export function ProductFilters({ categories }: { categories: string[] }) {
   }
 
   return (
-    <div className="mb-8 space-y-4">
+    <div className="mb-8 space-y-4 md:flex justify-center gap-7">
       <form onSubmit={handleSearch} className="relative max-w-md">
         <Input
           type="text"
           placeholder="Search products..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="pl-10 rounded-full"
+          className="pl-10 rounded-full md:min-w-sm"
         />
         <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
       </form>
