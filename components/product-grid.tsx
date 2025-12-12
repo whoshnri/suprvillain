@@ -14,11 +14,11 @@ export function ProductGrid({ products }: { products: Product[] }) {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
       {products.map((product) => (
-        <Link key={product.id} href={`/product/${product.id}`}>
-          <Card className="overflow-hidden border-0 bg-muted/40 hover:bg-muted/60 transition-colors group cursor-pointer">
-            <div className="relative aspect-square overflow-hidden bg-muted">
+        <Link key={product.id} href={`/product/${product.id}`} className="group">
+          <Card className="overflow-hidden bg-card/80 hover:bg-card border backdrop-blur-sm transition-all duration-300 group-hover:shadow-lg group-hover:-translate-y-1">
+            <div className="relative aspect-square overflow-hidden">
               <Image
                 src={product.image || "/placeholder.svg"}
                 alt={product.name}
@@ -26,15 +26,15 @@ export function ProductGrid({ products }: { products: Product[] }) {
                 className="object-cover group-hover:scale-105 transition-transform duration-300"
               />
             </div>
-            <div className="p-4">
-              <h3 className="font-medium text-base mb-1 leading-tight">{product.name}</h3>
-              <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{product.description}</p>
+            <div className="p-6">
+              <h3 className="font-semibold text-lg mb-2 leading-tight">{product.name}</h3>
+              <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{product.description}</p>
               <div className="flex items-center justify-between">
-                <p className="font-semibold text-lg">${product.price.toFixed(2)}</p>
+                <p className="font-bold text-xl">${product.price.toFixed(2)}</p>
                 {product.stock > 0 ? (
-                  <span className="text-xs text-muted-foreground">{product.stock} in stock</span>
+                  <span className="text-sm font-medium text-muted-foreground">{product.stock} in stock</span>
                 ) : (
-                  <span className="text-xs text-destructive">Out of stock</span>
+                  <span className="text-sm font-medium text-destructive">Out of stock</span>
                 )}
               </div>
             </div>
