@@ -3,9 +3,11 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
-import { CartProvider } from "@/lib/cart-context"
+import { CartProvider } from "@/components/cart-provider"
 import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
 import { ThemeProvider } from "next-themes"
+import { headers } from "next/headers"
 
 const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
@@ -33,19 +35,21 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const country = (await headers()).get("x-vercel-ip-country") || "GB"
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <CartProvider>
-            <div className="flex flex-col min-h-screen px-8 mx-auto">
+          <CartProvider country={country}>
+            <div className="flex flex-col min-h-screen px-4 sm:px-6 md:px-8 mx-auto max-w-7xl">
               <Header />
               <main className="flex-grow">{children}</main>
+              <Footer />
             </div>
           </CartProvider>
           <Analytics />

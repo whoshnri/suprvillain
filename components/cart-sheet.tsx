@@ -6,9 +6,10 @@ import { useCart } from "@/lib/cart-context"
 import { FiShoppingCart, FiMinus, FiPlus, FiX } from "react-icons/fi"
 import Image from "next/image"
 import Link from "next/link"
+import { formatPrice } from "@/lib/currency"
 
 export function CartSheet() {
-  const { items, removeItem, updateQuantity, total, itemCount } = useCart()
+  const { items, removeItem, updateQuantity, total, itemCount, country } = useCart()
 
   return (
     <Sheet>
@@ -41,7 +42,7 @@ export function CartSheet() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="font-medium text-sm leading-tight">{item.name}</h4>
-                      <p className="text-sm text-muted-foreground mt-1">${item.price.toFixed(2)}</p>
+                      <p className="text-sm text-muted-foreground mt-1">{formatPrice(item.price, country)}</p>
                       <div className="flex items-center gap-2 mt-2">
                         <Button
                           variant="outline"
@@ -76,7 +77,7 @@ export function CartSheet() {
               <div className="border-t p-4 space-y-4 mt-10">
                 <div className="flex justify-between text-lg font-semibold">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>{formatPrice(total, country)}</span>
                 </div>
                 <Button asChild className="w-full rounded-full" size="lg">
                   <Link href="/checkout">Checkout</Link>

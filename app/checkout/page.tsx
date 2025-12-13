@@ -14,9 +14,10 @@ import { createOrder } from "@/app/actions/orders"
 import Image from "next/image"
 import Link from "next/link"
 import { FiArrowLeft } from "react-icons/fi"
+import { formatPrice } from "@/lib/currency"
 
 export default function CheckoutPage() {
-  const { items, total, clearCart } = useCart()
+  const { items, total, clearCart, country } = useCart()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
@@ -46,15 +47,50 @@ export default function CheckoutPage() {
 
   return (
     <main className="min-h-screen">
-      <div className="container py-8 max-w-6xl mx-auto">
-        <Button variant="ghost" asChild className="mb-6 rounded-full">
+      <div className="container py-6 md:py-10 max-w-6xl mx-auto">
+        <Button variant="ghost" asChild className="mb-6 rounded-full -ml-4">
           <Link href="/">
             <FiArrowLeft className="mr-2 h-4 w-4" />
             Back to shop
           </Link>
         </Button>
-        <h1 className="text-4xl font-bold tracking-tight mb-8">Checkout</h1>
-        <div className="grid lg:grid-cols-2 gap-12">
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-6 md:mb-8">Checkout</h1>
+        <div className="grid lg:grid-cols-2 gap-8 md:gap-12">
+          <div className="lg:order-last">
+            <Card className="p-6 rounded-2xl sticky top-24">
+              <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+              <div className="space-y-4 mb-6">
+                {items.map((item) => (
+                  <div key={item.id} className="flex gap-4">
+                    <div className="relative h-16 w-16 rounded-xl overflow-hidden bg-muted flex-shrink-0">
+                      <Image src={item.image || "/placeholder.svg"} alt={item.name} fill className="object-cover" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-medium text-sm leading-tight">{item.name}</h4>
+                      <p className="text-sm text-muted-foreground mt-1">Qty: {item.quantity}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-medium">{formatPrice(item.price * item.quantity, country)}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="border-t pt-4 space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Subtotal</span>
+                  <span>{formatPrice(total, country)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Shipping</span>
+                  <span>Free</span>
+                </div>
+                <div className="flex justify-between text-lg font-bold pt-2 border-t">
+                  <span>Total</span>
+                  <span>{formatPrice(total, country)}</span>
+                </div>
+              </div>
+            </Card>
+          </div>
           <div>
             <form onSubmit={handleSubmit} className="space-y-6">
               <Card className="p-6 rounded-2xl">
@@ -93,7 +129,7 @@ export default function CheckoutPage() {
                       <p className="text-sm text-muted-foreground mt-1">Qty: {item.quantity}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                      <p className="font-medium">{formatPrice(item.price * item.quantity, country)}</p>
                     </div>
                   </div>
                 ))}
@@ -101,7 +137,7 @@ export default function CheckoutPage() {
               <div className="border-t pt-4 space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Subtotal</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>{formatPrice(total, country)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Shipping</span>
@@ -109,7 +145,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex justify-between text-lg font-bold pt-2 border-t">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>{formatPrice(total, country)}</span>
                 </div>
               </div>
             </Card>

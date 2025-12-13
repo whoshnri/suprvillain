@@ -37,18 +37,18 @@ export function ProductFilters({ categories }: { categories: string[] }) {
   }
 
   return (
-    <div className="mb-8 space-y-4 md:flex justify-center gap-7">
-      <form onSubmit={handleSearch} className="relative max-w-md">
+    <div className="mb-8 flex flex-col md:flex-row gap-4 md:items-center justify-between">
+      <form onSubmit={handleSearch} className="relative w-full md:max-w-xs lg:max-w-sm">
         <Input
           type="text"
           placeholder="Search products..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="pl-10 rounded-full md:min-w-sm"
+          className="pl-10 rounded-full w-full"
         />
         <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
       </form>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 justify-center md:justify-end">
         <Button
           variant={!currentCategory ? "default" : "outline"}
           onClick={() => handleCategoryChange(null)}
