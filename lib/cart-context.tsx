@@ -21,12 +21,15 @@ type CartContextType = {
   total: number
   getItem: (id: string) => CartItem | undefined
   itemCount: number
+  country: string
+  setCountry: (country: string) => void
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([])
+  const [country, setCountry] = useState("GB")
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -84,6 +87,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         clearCart,
         total,
         itemCount,
+        country,
+        setCountry,
       }}
     >
       {children}

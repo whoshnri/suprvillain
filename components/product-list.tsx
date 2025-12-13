@@ -9,11 +9,14 @@ import { deleteProduct } from "@/app/actions/products"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { Product } from "@/lib/types"
+import { useCart } from "@/lib/cart-context"
+import { formatPrice } from "@/lib/currency"
 
 
 export function ProductList({ products }: { products: Product[] }) {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
   const router = useRouter()
+  const { country } = useCart()
 
   const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this product?")) {
@@ -46,7 +49,7 @@ export function ProductList({ products }: { products: Product[] }) {
                 </TableCell>
                 <TableCell className="font-medium">{product.name}</TableCell>
                 <TableCell>{product.category}</TableCell>
-                <TableCell className="text-right">${product.price.toFixed(2)}</TableCell>
+                <TableCell className="text-right">{formatPrice(product.price, country)}</TableCell>
                 <TableCell className="text-right">{product.stock}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
