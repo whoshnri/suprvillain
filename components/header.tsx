@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { CartSheet } from "./cart-sheet"
 import { ThemeSwitcher } from "./theme-switcher"
+import { FiInstagram } from "react-icons/fi"
 
 function StoreIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -34,6 +35,9 @@ export function Header() {
           <span className="hidden sm:inline-block">Suprvillain Store</span>
         </Link>
         <nav className="flex items-center gap-6">
+          <Link href="https://www.instagram.com/vinyloncloth/" className="border border-white/20 rounded-full p-2">
+          <FiInstagram className="w-5 h-5 text-foreground/80 "/>
+          </Link>
           <ThemeSwitcher />
           <CartSheet />
         </nav>

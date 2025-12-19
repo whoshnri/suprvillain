@@ -61,7 +61,7 @@ export default async function HomePage({
         </div>
         <ProductGrid products={featuredProducts} country={country} />
       </section>
-      <section className="container py-12 md:py-16 bg-secondary/50">
+      <section className="container py-12 md:py-16 ">
         <div className="flex flex-col items-center text-center space-y-2 mb-8 md:mb-12">
           <h2 className="text-3xl font-bold tracking-tight">Find Your Vibe</h2>
           <p className="text-muted-foreground">Whatever your aesthetic, we've got the gear.</p>

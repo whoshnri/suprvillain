@@ -7,12 +7,15 @@ import { FiShoppingCart, FiMinus, FiPlus, FiX } from "react-icons/fi"
 import Image from "next/image"
 import Link from "next/link"
 import { formatPrice } from "@/lib/currency"
+import { useState } from "react"
 
 export function CartSheet() {
   const { items, removeItem, updateQuantity, total, itemCount, country } = useCart()
+  const [open, setOpen] = useState(true)
+
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button variant="outline" size="icon" className="relative rounded-full bg-transparent">
           <FiShoppingCart className="h-5 w-5" />
@@ -79,7 +82,10 @@ export function CartSheet() {
                   <span>Total</span>
                   <span>{formatPrice(total, country)}</span>
                 </div>
-                <Button asChild className="w-full rounded-full" size="lg">
+                <Button 
+                //close the sheet after clicking the button
+                onClick={() => setOpen(false)}
+                asChild className="w-full rounded-full" size="lg">
                   <Link href="/checkout">Checkout</Link>
                 </Button>
               </div>
