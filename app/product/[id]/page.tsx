@@ -7,14 +7,30 @@ import Link from "next/link"
 import { FiArrowLeft } from "react-icons/fi"
 import { headers } from "next/headers"
 import { formatPrice } from "@/lib/currency"
+import { Metadata } from "next"
+import { cache } from "react"
 
-export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
+type Props = {
+  params: { id: string }
+}
+
+const getProduct = cache(async (id: string) => {
+  const product = await prisma.product.findUnique({ where: { id } })
+  return product
+})
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const product = await getProduct(params.id)
+
+  return {
+    title: product?.name,
+    description: product?.description,
+  }
+}
+
+export default async function ProductPage({ params }: Props) {
   const country = (await headers()).get("x-vercel-ip-country") || "GB"
-  const { id } = await params
-
-  const product = await prisma.product.findUnique({
-    where: { id },
-  })
+  const product = await getProduct(params.id)
 
   if (!product) {
     notFound()
