@@ -46,9 +46,9 @@ export default async function RootLayout({
       <body className={`font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <CartProvider country={country}>
-            <div className="flex flex-col min-h-screen px-4 sm:px-6 md:px-8 mx-auto max-w-7xl">
+            <div className="flex flex-col min-h-screen mx-auto ">
               <Header />
-              <main className="flex-grow">{children}</main>
+              <main className="grow">{children}</main>
               <Footer />
             </div>
           </CartProvider>

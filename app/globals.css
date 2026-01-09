@@ -77,6 +77,10 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+body{
+  zoom: 85%
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

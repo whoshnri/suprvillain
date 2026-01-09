@@ -7,20 +7,40 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { FiPlus } from "react-icons/fi"
 import { useState } from "react"
 import { createProduct } from "@/app/actions/products"
 import { useRouter } from "next/navigation"
+import { SizeSelector } from "@/components/admin/size-selector"
+import { Size } from "@/lib/generated/prisma/enums"
 
-export function CreateProductButton() {
+export function CreateProductButton({
+  campaignId,
+  allCampaigns = []
+}: {
+  campaignId?: string
+  allCampaigns?: { id: string, title: string }[]
+}) {
   const [open, setOpen] = useState(false)
+  const [sizes, setSizes] = useState<Size[]>([])
+  const [selectedCampaignId, setSelectedCampaignId] = useState<string>(campaignId || "none")
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
-    await createProduct(formData)
+
+    // Explicitly handle campaign assignment
+    const finalCampaignId = campaignId || (selectedCampaignId === "none" ? "" : selectedCampaignId)
+    if (finalCampaignId) {
+      formData.set("campaignId", finalCampaignId)
+    }
+
+    await createProduct(formData, sizes)
     setOpen(false)
+    setSizes([])
+    setSelectedCampaignId(campaignId || "none")
     router.refresh()
   }
 
@@ -60,6 +80,28 @@ export function CreateProductButton() {
               <Label htmlFor="stock">Stock</Label>
               <Input id="stock" name="stock" type="number" required className="rounded-xl" />
             </div>
+          </div>
+
+          {!campaignId && allCampaigns.length > 0 && (
+            <div className="space-y-2">
+              <Label htmlFor="campaign">Assign to Campaign (Optional)</Label>
+              <Select value={selectedCampaignId} onValueChange={setSelectedCampaignId}>
+                <SelectTrigger className="rounded-xl">
+                  <SelectValue placeholder="Select a campaign" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">None (Independent Product)</SelectItem>
+                  {allCampaigns.map((c) => (
+                    <SelectItem key={c.id} value={c.id}>{c.title}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <Label>Available Sizes</Label>
+            <SizeSelector selectedSizes={sizes as any} onSizesChange={(s) => setSizes(s as any)} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="image">Image URL</Label>

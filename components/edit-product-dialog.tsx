@@ -7,26 +7,40 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { updateProduct } from "@/app/actions/products"
 import { useRouter } from "next/navigation"
 import { Product } from "@/lib/types"
-
+import { SizeSelector } from "@/components/admin/size-selector"
+import { useState } from "react"
+import { Size } from "@/lib/generated/prisma/enums"
 
 export function EditProductDialog({
   product,
   open,
   onOpenChange,
+  allCampaigns = []
 }: {
   product: Product
   open: boolean
   onOpenChange: (open: boolean) => void
+  allCampaigns?: { id: string, title: string }[]
 }) {
   const router = useRouter()
+  const [sizes, setSizes] = useState<Size[]>(product.sizes || [])
+  const [selectedCampaignId, setSelectedCampaignId] = useState<string>(product.campaignId || "none")
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
-    await updateProduct(product.id, formData)
+
+    // Explicitly handle campaign assignment
+    const finalCampaignId = selectedCampaignId === "none" ? "" : selectedCampaignId
+    if (finalCampaignId !== undefined) {
+      formData.set("campaignId", finalCampaignId)
+    }
+
+    await updateProduct(product.id, formData, sizes)
     onOpenChange(false)
     router.refresh()
   }
@@ -89,6 +103,28 @@ export function EditProductDialog({
                 className="rounded-xl"
               />
             </div>
+          </div>
+
+          {allCampaigns.length > 0 && (
+            <div className="space-y-2">
+              <Label htmlFor="edit-campaign">Campaign Assignment</Label>
+              <Select value={selectedCampaignId} onValueChange={setSelectedCampaignId}>
+                <SelectTrigger className="rounded-xl">
+                  <SelectValue placeholder="Select a campaign" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">None (Independent Product)</SelectItem>
+                  {allCampaigns.map((c) => (
+                    <SelectItem key={c.id} value={c.id}>{c.title}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <Label>Available Sizes</Label>
+            <SizeSelector selectedSizes={sizes as any} onSizesChange={(s) => setSizes(s as any)} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="edit-image">Image URL</Label>

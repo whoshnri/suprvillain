@@ -10,16 +10,17 @@ export type CartItem = {
   price: number
   image: string
   quantity: number
+  size?: string
 }
 
 type CartContextType = {
   items: CartItem[]
   addItem: (item: Omit<CartItem, "quantity">) => void
-  removeItem: (id: string) => void
-  updateQuantity: (id: string, quantity: number) => void
+  removeItem: (id: string, size?: string) => void
+  updateQuantity: (id: string, quantity: number, size?: string) => void
   clearCart: () => void
   total: number
-  getItem: (id: string) => CartItem | undefined
+  getItem: (id: string, size?: string) => CartItem | undefined
   itemCount: number
   country: string
   setCountry: (country: string) => void
@@ -39,8 +40,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
-  function getItem(id: string) {
-    return items.find((i) => i.id === id)
+  function getItem(id: string, size?: string) {
+    return items.find((i) => i.id === id && i.size === size)
   }
   // Save cart to localStorage whenever it changes
   useEffect(() => {
@@ -49,24 +50,24 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addItem = (item: Omit<CartItem, "quantity">) => {
     setItems((current) => {
-      const existing = current.find((i) => i.id === item.id)
+      const existing = current.find((i) => i.id === item.id && i.size === item.size)
       if (existing) {
-        return current.map((i) => (i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i))
+        return current.map((i) => (i.id === item.id && i.size === item.size ? { ...i, quantity: i.quantity + 1 } : i))
       }
       return [...current, { ...item, quantity: 1 }]
     })
   }
 
-  const removeItem = (id: string) => {
-    setItems((current) => current.filter((i) => i.id !== id))
+  const removeItem = (id: string, size?: string) => {
+    setItems((current) => current.filter((i) => !(i.id === id && i.size === size)))
   }
 
-  const updateQuantity = (id: string, quantity: number) => {
+  const updateQuantity = (id: string, quantity: number, size?: string) => {
     if (quantity <= 0) {
-      removeItem(id)
+      removeItem(id, size)
       return
     }
-    setItems((current) => current.map((i) => (i.id === id ? { ...i, quantity } : i)))
+    setItems((current) => current.map((i) => (i.id === id && i.size === size ? { ...i, quantity } : i)))
   }
 
   const clearCart = () => {

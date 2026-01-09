@@ -20,7 +20,7 @@ export function ProductGrid({
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mx-auto">
       {products.map((product) => (
         <Link key={product.id} href={`/product/${product.id}`} className="group">
           <Card className="overflow-hidden bg-card/80 hover:bg-card border backdrop-blur-sm transition-all duration-300 group-hover:shadow-lg group-hover:-translate-y-1">

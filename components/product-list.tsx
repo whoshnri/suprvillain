@@ -13,7 +13,13 @@ import { useCart } from "@/lib/cart-context"
 import { formatPrice } from "@/lib/currency"
 
 
-export function ProductList({ products }: { products: Product[] }) {
+export function ProductList({
+  products,
+  allCampaigns = []
+}: {
+  products: Product[],
+  allCampaigns?: { id: string, title: string }[]
+}) {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
   const router = useRouter()
   const { country } = useCart()
@@ -27,7 +33,7 @@ export function ProductList({ products }: { products: Product[] }) {
 
   return (
     <>
-      <div className="rounded-2xl border bg-card overflow-hidden">
+      <div className="rounded-2xl border bg-card overflow-hidden mx-auto max-w-7xl">
         <Table>
           <TableHeader>
             <TableRow>
@@ -79,6 +85,7 @@ export function ProductList({ products }: { products: Product[] }) {
       {editingProduct && (
         <EditProductDialog
           product={editingProduct}
+          allCampaigns={allCampaigns}
           open={!!editingProduct}
           onOpenChange={(open) => !open && setEditingProduct(null)}
         />
@@ -86,3 +93,4 @@ export function ProductList({ products }: { products: Product[] }) {
     </>
   )
 }
+

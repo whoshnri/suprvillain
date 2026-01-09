@@ -11,85 +11,96 @@ import { useState } from "react"
 
 export function CartSheet() {
   const { items, removeItem, updateQuantity, total, itemCount, country } = useCart()
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
 
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon" className="relative rounded-full bg-transparent">
+        <Button variant="outline" size="icon" className="relative rounded-full bg-transparent border-neutral-200 dark:border-neutral-800">
           <FiShoppingCart className="h-5 w-5" />
           {itemCount > 0 && (
-            <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-foreground text-background text-xs flex items-center justify-center font-medium">
+            <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-black text-[10px] flex items-center justify-center font-black">
               {itemCount}
             </span>
           )}
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-full sm:max-w-lg">
-        <SheetHeader>
-          <SheetTitle>Shopping Cart</SheetTitle>
-        </SheetHeader>
-        <div className="flex flex-col h-full">
-          {items.length === 0 ? (
-            <div className="flex-1 flex items-center justify-center">
-              <p className="text-muted-foreground">Your cart is empty</p>
-            </div>
-          ) : (
-            <>
-              <div className="flex-1 overflow-auto p-6 space-y-4">
-                {items.map((item) => (
-                  <div key={item.id} className="flex gap-4 items-start">
-                    <div className="relative h-20 w-20 rounded-xl overflow-hidden bg-muted flex-shrink-0">
-                      <Image src={item.image || "/placeholder.svg"} alt={item.name} fill className="object-cover" />
+      <SheetContent className="w-full sm:max-w-lg rounded-l-[2.5rem] p-0 border-0 shadow-2xl">
+        <div className="flex flex-col h-full bg-white dark:bg-neutral-950">
+          <SheetHeader className="p-8 border-b border-neutral-100 dark:border-neutral-900">
+            <SheetTitle className="text-3xl font-black tracking-tighter uppercase">Your Cart</SheetTitle>
+          </SheetHeader>
+
+          <div className="flex-1 overflow-auto p-8 space-y-8">
+            {items.length === 0 ? (
+              <div className="h-full flex flex-col items-center justify-center space-y-4 opacity-20">
+                <FiShoppingCart className="h-16 w-16" />
+                <p className="font-bold uppercase tracking-widest text-xs">Your cart is empty</p>
+              </div>
+            ) : (
+              items.map((item) => (
+                <div key={`${item.id}-${item.size}`} className="flex gap-6 items-center group">
+                  <div className="relative h-24 w-24 rounded-2xl overflow-hidden bg-neutral-100 dark:bg-neutral-900 shrink-0 shadow-sm transition-transform group-hover:scale-105">
+                    <Image src={item.image || "/placeholder.svg"} alt={item.name} fill className="object-cover" />
+                  </div>
+                  <div className="flex-1 min-w-0 space-y-1">
+                    <div className="flex justify-between items-start gap-2">
+                      <h4 className="font-black text-sm uppercase tracking-tight truncate leading-none">{item.name}</h4>
+                      <button
+                        onClick={() => removeItem(item.id, item.size)}
+                        className="opacity-0 group-hover:opacity-100 p-1 hover:text-destructive transition-all"
+                      >
+                        <FiX className="h-4 w-4" />
+                      </button>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-sm leading-tight">{item.name}</h4>
-                      <p className="text-sm text-muted-foreground mt-1">{formatPrice(item.price, country)}</p>
-                      <div className="flex items-center gap-2 mt-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-7 w-7 rounded-full bg-transparent"
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+
+                    {item.size && (
+                      <span className="inline-block px-2 py-0.5 bg-neutral-100 dark:bg-neutral-800 rounded text-[10px] font-black uppercase tracking-widest">
+                        Size: {item.size}
+                      </span>
+                    )}
+
+                    <p className="text-xs font-bold text-neutral-400">{formatPrice(item.price, country)}</p>
+
+                    <div className="flex items-center gap-4 pt-2">
+                      <div className="flex items-center gap-3 bg-neutral-50 dark:bg-neutral-900 rounded-full px-3 py-1">
+                        <button
+                          className="hover:text-primary transition-colors disabled:opacity-20"
+                          onClick={() => updateQuantity(item.id, item.quantity - 1, item.size)}
                         >
                           <FiMinus className="h-3 w-3" />
-                        </Button>
-                        <span className="text-sm font-medium w-8 text-center">{item.quantity}</span>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-7 w-7 rounded-full bg-transparent"
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        </button>
+                        <span className="text-xs font-black min-w-4 text-center">{item.quantity}</span>
+                        <button
+                          className="hover:text-primary transition-colors"
+                          onClick={() => updateQuantity(item.id, item.quantity + 1, item.size)}
                         >
                           <FiPlus className="h-3 w-3" />
-                        </Button>
+                        </button>
                       </div>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 rounded-full flex-shrink-0"
-                      onClick={() => removeItem(item.id)}
-                    >
-                      <FiX className="h-4 w-4" />
-                    </Button>
                   </div>
-                ))}
-              </div>
-              <div className="border-t p-4 space-y-4 mt-10">
-                <div className="flex justify-between text-lg font-semibold">
-                  <span>Total</span>
-                  <span>{formatPrice(total, country)}</span>
                 </div>
-                <Button 
-                //close the sheet after clicking the button
-                onClick={() => setOpen(false)}
-                asChild className="w-full rounded-full" size="lg">
-                  <Link href="/checkout">Checkout</Link>
-                </Button>
+              ))
+            )}
+          </div>
+
+          {items.length > 0 && (
+            <div className="p-8 bg-neutral-50 dark:bg-neutral-900 border-t border-neutral-100 dark:border-neutral-800 space-y-6">
+              <div className="flex justify-between items-baseline">
+                <span className="text-xs font-black uppercase tracking-widest text-neutral-400">Total</span>
+                <span className="text-3xl font-black tracking-tighter">{formatPrice(total, country)}</span>
               </div>
-            </>
+              <Button
+                onClick={() => setOpen(false)}
+                asChild
+                className="w-full h-16 rounded-full text-lg font-black uppercase tracking-[0.2em] shadow-xl"
+                size="lg"
+              >
+                <Link href="/checkout">Complete Order</Link>
+              </Button>
+            </div>
           )}
         </div>
       </SheetContent>

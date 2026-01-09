@@ -6,7 +6,7 @@ import Link from "next/link"
 export function Footer() {
   return (
     <footer className="bg-secondary/50 rounded-t-xl mt-16">
-      <div className="container py-12">
+      <div className="container py-12 mx-auto">
         <div className="flex justify-between items-center px-8 flex-col md:flex-row gap-8 text-center md:text-left mx-auto">
           <div className="space-y-4 flex-1">
             <h4 className="font-semibold text-lg">Suprvillain</h4>
