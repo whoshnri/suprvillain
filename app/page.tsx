@@ -44,7 +44,7 @@ export default async function HomePage() {
   })
 
   return (
-    <main className="min-h-screen w-full bg-[#f8f8f8] dark:bg-neutral-950">
+    <main className="min-h-screen w-full p-0 bg-[#f8f8f8] dark:bg-neutral-950">
       {/* Editorial Lookbook Hero */}
       {heroCampaign && (
         <section className="w-full overflow-hidden">
@@ -169,7 +169,7 @@ export default async function HomePage() {
         ))}
       </div>
 
-      <section className="py-24 md:py-32 bg-white dark:bg-neutral-900 border-t border-neutral-100 dark:border-neutral-800">
+      <section className="p-24 md:py-32 bg-white dark:bg-neutral-900 border-t border-neutral-100 dark:border-neutral-800">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="flex flex-col md:flex-row items-baseline justify-between gap-4 mb-16">
             <h2 className="text-5xl md:text-7xl font-black tracking-tighter uppercase leading-[0.9]">
